@@ -195,9 +195,11 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
     if (target == RNImagePickerTargetCamera) {
         [self checkCameraPermissions:^(BOOL granted) {
             if (!granted) {
-                if (![self showPermissionAlert]) {
-                    self.callback(@[@{@"error": @"Camera permissions not granted"}]);
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (![self showPermissionAlert]) {
+                        self.callback(@[@{@"error": @"Camera permissions not granted"}]);
+                    }
+                });
             } else {
                 showPickerViewController();
             }
@@ -206,9 +208,11 @@ RCT_EXPORT_METHOD(showImagePicker:(NSDictionary *)options callback:(RCTResponseS
     else { // RNImagePickerTargetLibrarySingleImage
         [self checkPhotosPermissions:^(BOOL granted) {
             if (!granted) {
-                if (![self showPermissionAlert]) {
-                    self.callback(@[@{@"error": @"Photo library permissions not granted"}]);
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (![self showPermissionAlert]) {
+                        self.callback(@[@{@"error": @"Photo library permissions not granted"}]);
+                    }
+                });
             } else {
                 showPickerViewController();
             }
